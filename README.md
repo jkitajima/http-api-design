@@ -39,7 +39,7 @@ Clients can interact with entities in two forms:
 
 ### ID as a Pair
 
-An object uniqueness is defined as a **pair** of values (entity + id) and not a single value (id).
+An object **uniqueness** is defined as a **pair** of values (entity + id) and not a single value (id).
 
 In other words, this does **not** define an object:
 
@@ -74,7 +74,7 @@ Valid forms of defining an object:
 
 ### Entities relationships are nested
 
-Since the single value of a an id does not defined an object, entities relationships are nested.
+Since the single value of an id does not define an object, entities relationships are nested.
 
 In other words, this does not define a relationship:
 ```json
@@ -103,7 +103,7 @@ Valid form of defining a relationship:
 
 ### The ID Pair is a Location
 
-Now that uniqueness of object is a pair consisting of both entity and id values, these two values together defines a location inside the API.
+Now that the uniqueness of object is a pair consisting of both entity and id values, these two values together defines a location inside the API.
 
 `GET /dogs/1`
 ```json
@@ -135,7 +135,7 @@ Now that uniqueness of object is a pair consisting of both entity and id values,
 
 ### Nested relationship objects are Expandable
 
-Since relationships are represented as nested objects, they can be expandable.
+Since relationships are represented as nested objects, they are **expandable**.
 
 `GET /dogs/1?expand=owner`
 ```json
@@ -156,9 +156,9 @@ Since relationships are represented as nested objects, they can be expandable.
 ```
 
 > [!IMPORTANT]
-> Relationship objects must either return the identification pair (entity + id) **OR** the full object data.
+> Relationship objects must either return the identification pair (entity + id) **or** the full object data.
 > 
-> **DO NOT** return partial representation of data.
+> **Do not** return partial representation of data.
 
 
 
