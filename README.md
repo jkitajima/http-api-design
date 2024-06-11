@@ -27,7 +27,7 @@ The purpose of this document is to establish a shared vocabulary and a pragmatic
 
 An API (Application Programming Interface) is represented as a **relationship** of **entities**.
 
-These entities cooperate together in other to perform actions, manage state and transfer representations of entity data.
+These entities cooperate together in order to perform actions, manage state and transfer representations of entity data.
 
 
 ### Entities have forms
@@ -133,7 +133,7 @@ Now that uniqueness of object is a pair consisting of both entity and id values,
 ```
 
 
-#### Nested relationship objects are Expandable
+### Nested relationship objects are Expandable
 
 Since relationships are represented as nested objects, they can be expandable.
 
