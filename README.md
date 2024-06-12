@@ -211,7 +211,7 @@ While, for a file upload using `multipart/form-data`, an action should be used: 
 ```json
 {
   "entity": "user_files",
-  "id": 1,
+  "id": "13728a84-e1dc-4de6-8f88-f0ba574907ad",
   "name": "gopher"
   "extension": ".png"
   "url": "https://storage.com/blobs/gopher.png"
@@ -252,7 +252,7 @@ Possible response:
 ```
 
 2. Upload car image by performing an **action**:
-`POST /cars/{id}/upload_photo`(using `multipart/form-data`)
+`POST /cars/{id}/upload_photo` (using `multipart/form-data`)
 
 This way, the logic of uploading the car image is decoupled for its creation, making the API more composable and making server-side logic easier to maintain, debug and reason about.
 
