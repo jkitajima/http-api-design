@@ -228,6 +228,7 @@ For instance, imagine that the client-side wants to create a `cars` object with 
 
 
 1. Create a `cars` object
+
 `POST /cars`
 ```json
 {
@@ -238,7 +239,6 @@ For instance, imagine that the client-side wants to create a `cars` object with 
 ```
 
 Possible response:
-
 
 ```json
 {
@@ -252,6 +252,7 @@ Possible response:
 ```
 
 2. Upload car image by performing an **action**:
+
 `POST /cars/{id}/upload_photo` (using `multipart/form-data`)
 
 This way, the logic of uploading the car image is decoupled for its creation, making the API more composable and making server-side logic easier to maintain, debug and reason about.
