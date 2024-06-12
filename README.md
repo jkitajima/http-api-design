@@ -253,9 +253,9 @@ Possible response:
 
 2. Upload car image by performing an **action**:
 
-`POST /cars/{id}/upload_photo` (using `multipart/form-data`)
+`POST /cars/1/upload_photo` (using `multipart/form-data`)
 
 This way, the logic of uploading the car image is decoupled for its creation, making the API more composable and making server-side logic easier to maintain, debug and reason about.
 
 > [!NOTE]
-> If the flow above requires a single call (making car metadata and photo upload atomic), a wrapper endpoint can be exposed through a gateway (reverse proxy).
+> If the flow above requires a single call for a specific client (making car metadata and photo upload atomic), a wrapper endpoint can be exposed through a gateway (reverse proxy). This pattern is know as [BFF (Backend for Frontend)](https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends).
