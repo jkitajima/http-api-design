@@ -18,7 +18,16 @@ The purpose of this document is to establish a shared vocabulary and a pragmatic
       <li><a href="#single-responsibility-and-concern-separation">Single Responsibility and Concern Separation</a></li>
     </ul>
   </li>
-  <li>TODO!</li>
+  <li><a href="#dealing-with-collections">Dealing with Collections</a>
+    <ul>
+      <li><a href="#collections-have-operations">Collections have operations</a></li>
+      <li><a href="#pagination">Pagination</a></li>
+      <li><a href="#sorting">Sorting</a></li>
+      <li><a href="#filtering">Filtering</a></li>
+      <li><a href="#collections-represents-mn-sided-relations">Collections represents M/N-sided relations</a></li>
+    </ul>
+  </li>
+  <li>Request and Response Cycle</li>
 </ul>
 
 
@@ -259,3 +268,190 @@ This way, the logic of uploading the car image is decoupled for its creation, ma
 
 > [!NOTE]
 > If the flow above requires a single call for a specific client (making car metadata and photo upload atomic), a wrapper endpoint can be exposed through a gateway (reverse proxy). This pattern is know as [BFF (Backend for Frontend)](https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends).
+
+
+## Dealing with Collections
+
+A **collection** in simply an array of entity objects.
+
+
+### Collections have **operations**
+
+Collections support the following operations:
+- Pagination
+- Sorting
+- Filtering
+
+
+### Pagination
+
+Clients can paginate through a collection using the `page_number` and `page_size` query params (if those values are not sent by the client, server defaults will be used).
+
+`GET /nations?page_number=1&page_size=2`: first page containing two `nations` objects.
+
+```json
+[
+  {
+    "entity": "nations",
+    "id": 1,
+    "name": "Brazil",
+    "continent": "America"
+  },
+  {
+    "entity": "nations",
+    "id": 2,
+    "name": "Uruguay",
+    "continent": "America"
+  }
+]
+```
+
+`GET /nations?page_number=3&page_size=3`: third page containing three `nations` objects.
+
+```json
+[
+  {
+    "entity": "nations",
+    "id": 7,
+    "name": "Japan",
+    "continent": "Asia"
+  },
+  {
+    "entity": "nations",
+    "id": 8,
+    "name": "China",
+    "continent": "Asia"
+  },
+  {
+    "entity": "nations",
+    "id": 9,
+    "name": "South Korea",
+    "continent": "Asia"
+  }
+]
+```
+
+
+### Sorting
+
+Sorting order can be either `ASCENDING` or `DESCENDING`.
+
+Sort nations by `name` in `ASCENDING` order: `GET /nations?sort=name`
+
+```json
+[
+  {
+    "entity": "nations",
+    "id": 122,
+    "name": "Afghanistan",
+    "continent": "Asia"
+  },
+  {
+    "entity": "nations",
+    "id": 83,
+    "name": "Albania",
+    "continent": "Europe"
+  },
+  {
+    "entity": "nations",
+    "id": 57,
+    "name": "Algeria",
+    "continent": "Africa"
+  }
+]
+```
+
+Sort nations by `name` in `DESCENDING` order: `GET /nations?sort=-name` (hyphen/minus signal in front of the field name)
+
+```json
+[
+  {
+    "entity": "nations",
+    "id": 160,
+    "name": "Zimbabwe",
+    "continent": "Africa"
+  },
+  {
+    "entity": "nations",
+    "id": 45,
+    "name": "Zambia",
+    "continent": "Africa"
+  },
+  {
+    "entity": "nations",
+    "id": 37,
+    "name": "Yugoslavia",
+    "continent": "Europe"
+  }
+]
+```
+
+
+### Filtering
+
+Clients can filter the collection by entity properties using the `filter` query param. The following table shows available filter operators.
+
+Filter operator          | Description           | Expression example
+--------------------     | --------------------- | -----------------------------------------------------
+**Comparison Operators** |                       |
+eq                       | Equal                 | city eq "Redmond"
+ne                       | Not equal             | city ne "London"
+gt                       | Greater than          | price gt 20
+ge                       | Greater than or equal | price ge 10
+lt                       | Less than             | price lt 20
+le                       | Less than or equal    | price le 100
+**Logical Operators**    |                       |
+and                      | Logical and           | price le 200 and price gt 3.5
+or                       | Logical or            | price le 3.5 or price gt 200
+not                      | Logical negation      | not price le 3.5
+**Grouping Operators**   |                       |
+( )                      | Precedence grouping   | (priority eq 1 or city eq "Redmond") and price gt 100
+
+Just insert the expression as a value for the `filter` query param:
+
+`GET /nations?filter=continent eq "Europe"`
+
+
+### Collections represents M/N-sided relations
+
+Recalling, there are 3 types of relationship between entities:
+- One-to-One (`1-1`)
+- One-to-Many (`1-N`)
+- Many-to-Many (`M-N`)
+
+As we've seen, [expandable nested objects](#nested-relationship-objects-are-expandable) represents **1-sided** relations. For **M/N relations** (one-to-many and many-to-many), we use collections.
+
+**One-to-Many (`1-N`)**: an **owner** has a collection of **dogs**.
+
+`GET /users/1/dogs` redirects to `/dogs?filter=owner.id eq 1` (fetch `dogs` collection filtering by the owner)
+
+```json
+[
+  {
+    "entity": "dogs",
+    "id": 1,
+    "name": "Max",
+    "owner": {
+      "entity": "users"
+      "id": 1,
+    }
+  },
+  {
+    "entity": "dogs",
+    "id": 2,
+    "name": "Scott",
+    "owner": {
+      "entity": "users",
+      "id": 1,
+      "name": "Ace Ventura"
+    }
+  }
+]
+```
+
+
+**Many-to-Many (`M-N`)**: relationship between `orders` and `products`. An order has a collection of products, and a product has a collection of orders.
+
+`GET /orders/{id}/products`: list products in that order.
+
+`GET /products/{id}/orders`: list the orders that a given product is present.
