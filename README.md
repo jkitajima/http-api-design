@@ -34,6 +34,7 @@ The purpose of this document is to establish a shared vocabulary and a pragmatic
       <li><a href="#json-response-document">JSON Response Document</a></li>
     </ul>
   </li>
+  <li><a href="#request-and-response-cycle">Request and Response Cycle</a></li>
 </ul>
 
 
@@ -632,3 +633,26 @@ Array of error objects detailing **client-side** errors. An **error object** con
   ]
 }
 ```
+
+## References
+
+JSON API
+- https://jsonapi.org
+- https://jsonapi.org/format/
+- https://jsonapi.org/format/#document-structure (Response document structure)
+- https://jsonapi.org/recommendations/
+- https://jsonapi.org/examples/
+
+Microsoft REST API Guidelines
+- https://github.com/microsoft/api-guidelines
+- https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md
+- https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md#polymorphic-types (Polymorphic types)
+- https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md?plain=1#L483 ("kind" field)
+- https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md#filter-operators (filtering collections)
+- https://github.com/microsoft/api-guidelines/blob/vNext/azure/ConsiderationsForServiceDesign.md
+- https://github.com/microsoft/api-guidelines/blob/vNext/azure/README.md
+
+Heroku Platform API (interagent)
+- https://geemus.gitbooks.io/http-api-design/content/en/
+- https://geemus.gitbooks.io/http-api-design/content/en/foundations/separate-concerns.html (Separate Concerns)
+- https://geemus.gitbooks.io/http-api-design/content/en/responses/nest-foreign-key-relations.html (Nest foreign key relations)
