@@ -29,8 +29,8 @@ The purpose of this document is to establish a shared vocabulary and a pragmatic
   </li>
   <li><a href="#request-and-response-cycle">Request and Response Cycle</a>
     <ul>
-      <li><a href="#requests-http-methods">Requests HTTP methods</a></li>
-      <li><a href="#responses-http-status-codes">Responses HTTP status codes</a></li>
+      <li><a href="#request-http-methods">Request HTTP methods</a></li>
+      <li><a href="#response-http-status-codes">Response HTTP status codes</a></li>
       <li><a href="#json-response-document">JSON Response Document</a></li>
     </ul>
   </li>
@@ -464,7 +464,7 @@ As we've seen, [expandable nested objects](#nested-relationship-objects-are-expa
 
 ## Request and Response Cycle
 
-### Requests HTTP methods
+### Request HTTP methods
 
 HTTP methods follows the specifications of [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html#name-methods). A summary is presented below.
 
@@ -477,7 +477,7 @@ PUT                      | Used for upserts
 DELETE                   | Client requests the deletion of an object
 
 
-### Responses HTTP status codes
+### Response HTTP status codes
 
 Status codes are categorized in four classes:
 
@@ -502,4 +502,115 @@ Status code                               | Result
 `404 Not Found`                           | Server did not find a current representation for the target resource
 `500 Internal Server Error`               | Server encountered an unexpected condition that prevented it from fulfilling the request
 
+
 ### JSON Response Document
+
+Unless returning a `204 No Content`, requests will return a JSON document. This document have defined fields, making the results predictable and stardandized.
+
+The document have possibly 4 root-level fields:
+- `meta`: optional object
+- `data`: only present if `errors` is absent. Either an object or an array of objects
+- `pagination`: only present if `data` is an array
+- `errors`: only present if `data` is absent
+
+If the four root-level fields above are absent (meaning a successful request returning no data), it is a `204 No Content` status code.
+
+
+#### Meta Object
+
+This object represents request metadata. Contains two defaults fields (`status` and `message`) and any other API-specific fields.
+
+Example (default fields; mostly for debugging)
+
+```json
+{
+  "meta": {
+    "status": 404,
+    "message": "Could not find any user with provided ID."
+  }
+}
+```
+
+More concrete examples
+
+```json
+{
+  "meta": {
+    "status": 201,
+    "message": "Created",
+    "request_token": "32606149-b8a2-42b0-b507-92d7f7c22465",
+    "remaining_quota": "Your API request limit is current at 69% of your daily usage quota."
+  }
+}
+```
+
+
+#### Data Object/Array
+
+Primary result of your request. The resulting data after requested was processed.
+
+`GET /nations/8`
+
+```json
+{
+  "data": {
+    "entity": "nations",
+    "id": 8,
+    "name": "China",
+    "continent": "Asia"
+  }
+}
+```
+
+
+#### Pagination Object
+
+If `data` is an object, `pagination` is present. This object consists of four fields:
+- `total_pages`: Total number of pages to represent the collection of objects using the current page size
+- `current_page`: Current page number
+- `page_size`: Page size controls how many objects each page will return
+- `objects_count`: Count of the number of objects existing in this collection
+
+`GET /nations?page_number=3&page_size=3`
+
+```json
+{
+  "data": [
+    {
+      "entity": "nations",
+      "id": 7,
+      "name": "Japan",
+      "continent": "Asia"
+    },
+    {
+      "entity": "nations",
+      "id": 8,
+      "name": "China",
+      "continent": "Asia"
+    },
+    {
+      "entity": "nations",
+      "id": 9,
+      "name": "South Korea",
+      "continent": "Asia"
+    }
+  ],
+  "pagination": {
+    "total_pages": 4,
+    "current_page": 3,
+    "page_size": 3,
+    "objects_count": 12
+  }
+}
+```
+
+
+#### Errors array
+
+Array of error objects detailing **client-side** errors. An **error object** consists of three fields:
+- `code`: application-specific error code
+- `title`: a short, human-readable title of the error caused by the client
+- `detail` (optional): error message providing details about the error in the current request context
+
+
+
