@@ -27,7 +27,13 @@ The purpose of this document is to establish a shared vocabulary and a pragmatic
       <li><a href="#collections-represents-mn-sided-relations">Collections represents M/N-sided relations</a></li>
     </ul>
   </li>
-  <li>Request and Response Cycle</li>
+  <li><a href="#request-and-response-cycle">Request and Response Cycle</a>
+    <ul>
+      <li><a href="#requests-http-methods">Requests HTTP methods</a></li>
+      <li><a href="#responses-http-status-codes">Responses HTTP status codes</a></li>
+      <li><a href="#json-response-document">JSON Response Document</a></li>
+    </ul>
+  </li>
 </ul>
 
 
@@ -433,7 +439,7 @@ As we've seen, [expandable nested objects](#nested-relationship-objects-are-expa
     "name": "Max",
     "owner": {
       "entity": "users"
-      "id": 1,
+      "id": 1
     }
   },
   {
@@ -442,8 +448,7 @@ As we've seen, [expandable nested objects](#nested-relationship-objects-are-expa
     "name": "Scott",
     "owner": {
       "entity": "users",
-      "id": 1,
-      "name": "Ace Ventura"
+      "id": 1
     }
   }
 ]
@@ -455,3 +460,46 @@ As we've seen, [expandable nested objects](#nested-relationship-objects-are-expa
 `GET /orders/{id}/products`: list products in that order.
 
 `GET /products/{id}/orders`: list the orders that a given product is present.
+
+
+## Request and Response Cycle
+
+### Requests HTTP methods
+
+HTTP methods follows the specifications of [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html#name-methods). A summary is presented below.
+
+HTTP method              | Common usage
+--------------------     | ---------------------
+POST                     | Create a new resource by transferring a representation; perform an unsafe action
+GET                      | Fetch an object or a collection of objects; perform a safe (read-only) action
+PATCH                    | Update an existing object by transferring a partial representation of entity data
+PUT                      | Used for upserts
+DELETE                   | Client requests the deletion of an object
+
+
+### Responses HTTP status codes
+
+Status codes are categorized in four classes:
+
+Status code range        | Result
+--------------------     | ---------------------
+2xx                      | Success
+3xx                      | Redirection
+4xx                      | Client-side errors
+5xx                      | Server-side exceptions
+
+Most commonly used response status codes are:
+
+Status code                               | Result
+---------------------------               | ---------------------
+`200 OK`                                  | Fetched an object/collection; updated (PATCH) an object; performed a safe (read-only) action
+`201 Created`                             | Request processing resulted in the creation of an object; performed an unsafe action
+`202 Accepted`                            | Used for asynchronous requests
+`204 No Content`                          | Request succeeded but returned no data
+`400 Bad Request`                         | Malformed request syntax or invalid request semantics
+`401 Unauthorized`                        | Lacking or invalid authentication credentials
+`403 Forbidden`                           | Server understood the request but refuses to fulfill it. Given credentials does not have enough access level to the specified resource
+`404 Not Found`                           | Server did not find a current representation for the target resource
+`500 Internal Server Error`               | Server encountered an unexpected condition that prevented it from fulfilling the request
+
+### JSON Response Document
