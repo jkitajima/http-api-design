@@ -34,7 +34,7 @@ The purpose of this document is to establish a shared vocabulary and a pragmatic
       <li><a href="#json-response-document">JSON Response Document</a></li>
     </ul>
   </li>
-  <li><a href="#request-and-response-cycle">Request and Response Cycle</a></li>
+  <li><a href="#references">References</a></li>
 </ul>
 
 
