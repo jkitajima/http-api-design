@@ -565,7 +565,7 @@ Primary result of your request. The resulting data after requested was processed
 
 #### Pagination Object
 
-If `data` is an object, `pagination` is present. This object consists of four fields:
+If `data` is an **array**, `pagination` is present. This object consists of four fields:
 - `total_pages`: Total number of pages to represent the collection of objects using the current page size
 - `current_page`: Current page number
 - `page_size`: Page size controls how many objects each page will return
@@ -612,5 +612,23 @@ Array of error objects detailing **client-side** errors. An **error object** con
 - `title`: a short, human-readable title of the error caused by the client
 - `detail` (optional): error message providing details about the error in the current request context
 
-
-
+```json
+{
+  "meta": {
+    "status": 400,
+    "message": "Failed to upload user profile image."
+  },
+  "errors": [
+    {
+      "code": 20202,
+      "title": "Invalid media type",
+      "detail": "Tried to upload image of content-type 'image/heic' while only 'image/png' is supported."
+    },
+    {
+      "code": 15370,
+      "title": "File too large",
+      "detail": "File upload limit is 5 MiB. Tried to upload a 17 MiB file."
+    }
+  ]
+}
+```
